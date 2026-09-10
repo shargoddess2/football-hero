@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+html<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -81,8 +81,6 @@
 <body>
 
 <div class="game-container">
-    
-    <!-- SCREEN 1: MAIN MENU -->
     <div id="screen-menu" class="screen active">
         <h1>⚽ FOOTBALL HERO</h1>
         <h3>Career Edition</h3>
@@ -90,7 +88,6 @@
         <button onclick="changeScreen('screen-setup')">Start New Career</button>
     </div>
 
-    <!-- SCREEN 2: LOGIN -->
     <div id="screen-login" class="screen">
         <h2>Career Login</h2>
         <input type="email" id="login-email" placeholder="Enter Email">
@@ -99,7 +96,6 @@
         <button onclick="changeScreen('screen-menu')" style="background:#444;">Back</button>
     </div>
 
-    <!-- SCREEN 3: CHARACTER SETUP -->
     <div id="screen-setup" class="screen">
         <h2>Create Your Player</h2>
         <input type="text" id="player-name" placeholder="Enter Player Name">
@@ -113,7 +109,6 @@
         <button onclick="startNewGame()">Begin Journey</button>
     </div>
 
-    <!-- SCREEN 4: MAIN GAMEPLAY HUB -->
     <div id="screen-hub" class="screen">
         <div class="stats-bar">
             <div class="stat-item">👤 Name: <b id="stat-name"></b></div>
@@ -128,14 +123,11 @@
 
         <h3 id="game-status-title">Season Matches Played: <span id="games-played">0</span>/5</h3>
         <div class="log-box" id="hub-log">Welcome to your football career!</div>
-
         <div id="deal-box" style="background: gold; color: black; padding: 10px; border-radius: 5px; margin-bottom: 10px; display: none; font-weight: bold; text-align: center;"></div>
-
         <button id="action-btn" onclick="playMatch()">Play Next Match</button>
         <button id="scenario-btn" onclick="triggerScenario()" style="background:#e67e22; display:none;">Handle Life Event</button>
     </div>
 
-    <!-- SCREEN 5: GAME OVER / MONETIZATION -->
     <div id="screen-gameover" class="screen">
         <h2 style="color:var(--danger);">❌ CAREER OVER</h2>
         <p id="gameover-reason"></p>
@@ -148,7 +140,6 @@
 </div>
 
 <script>
-    // GAME STATE VARIABLES
     let player = {
         name: "",
         country: "",
@@ -171,7 +162,6 @@
         "France": "FC Banlieue (National 3)"
     };
 
-    // NAVIGATION
     function changeScreen(screenId) {
         document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
         document.getElementById(screenId).classList.add('active');
@@ -225,24 +215,17 @@
         log.scrollTop = log.scrollHeight;
     }
 
-    // MATCH SIMULATION ENGINE
     function playMatch() {
         player.gamesPlayed++;
-        
-        // Base rating calculations influenced by your standing inside the squad
-        let modifier = (player.managerRel + player.teamRel) / 20; // max +10 bonus
-        let randomFactor = Math.random() * 4 + 4; // base 4 to 8
+        let modifier = (player.managerRel + player.teamRel) / 20;
+        let randomFactor = Math.random() * 4 + 4;
         let finalRating = Math.min(10, ((randomFactor + (modifier / 5))).toFixed(1));
-        
         player.totalRatings += parseFloat(finalRating);
-        
-        // Fan calculation based on performance
         let newFans = Math.floor(finalRating * (player.tier === "Non-Professional" ? 20 : 5000));
         player.fans += newFans;
 
         logToHub(`MATCH ${player.gamesPlayed}: Finished with a match rating of ⭐️ ${finalRating}. Gained ${newFans} fans.`);
 
-        // Score Hero Rewind Feature
         if (finalRating < 6.0) {
             let choice = confirm("You missed a decisive shot! Watch an Ad to rewind time and take the shot again?");
             if(choice) {
@@ -254,4 +237,21 @@
 
         updateHub();
 
-Use code with caution.// Check Career Stage Milestonesif (player.gamesPlayed === 5 && player.tier === "Non-Professional") {runScoutTryouts();return;}if (player.gamesPlayed >= 10) {evaluateLeaguePerformance();return;}// Show random drama scenarios half of the timeif(Math.random() > 0.5) {document.getElementById('action-btn').style.display = 'none';document.getElementById('scenario-btn').style.display = 'block';}}// SCOUT TRYOUTS CALCULATION (AFTER FIRST 5 MATCHES)function runScoutTryouts() {let avg = player.totalRatings / 5;logToHub(--- TRYOUT EVALUATION ---);logToHub(Your 5-game average scout rating: ${avg.toFixed(1)});if (avg >= 9.0) {player.tier = "Premier League Youth";player.club = "Manchester Reds U23";} else if (avg >= 8.0) {player.tier = "Championship";player.club = "Birmingham Blues";} else if (avg >= 7.0) {player.tier = "League One";player.club = "Yorkshire Athletic";} else if (avg >= 6.0) {player.tier = "League Two";player.club = "Coastal United";} else {player.tier = "National League";player.club = "Town Center FC";}logToHub(Scouts finalized terms! You have been placed into the **${player.tier}** playing for **${player.club}**.);player.gamesPlayed = 0;player.totalRatings = 0;updateHub();}// REGULAR LEAGUE PERFORMANCE EVALUATIONfunction evaluateLeaguePerformance() {let avg = player.totalRatings / 10;logToHub(--- END OF REVIEWS ---);if (player.tier === "National League" && avg < 6.0) {triggerGameOver("You performed poorly over your initial stretch in the National League. The board released you from your contract. No other teams want to take a gamble on you.");return;}if (player.tier === "Premier League Youth") {if (avg >= 9.0) {player.tier = "Premier League First Team";player.club = "Manchester Reds Senior Team";logToHub("🚀 Sensational! The First Team manager called you up to start alongside world-class real players!");} else if (avg < 8.0) {player.tier = "Championship";player.club = "Birmingham Blues";logToHub("📉 Dropped! You didn't maintain a 9.0 average. You were sent down to the Championship.");}}// Simulating progressive yearsplayer.age++;if (player.age >= 40 && !player.isLifetime) {triggerGameOver("Retirement! You reached the age of 40. Your legs cannot handle professional match requirements any longer.");return;}player.gamesPlayed = 0;player.totalRatings = 0;updateHub();}// DYNAMIC BRAND DEALSfunction checkBrandDeals() {const dBox = document.getElementById('deal-box');if (player.fans >= 1000000 && player.activeDeal !== "Nike") {player.activeDeal = "Nike";showDeal("🔥 Elite Sponsor: Signed a major multi-million boot partnership deal with NIKE!");} else if (player.fans >= 100000 && player.activeDeal !== "TV Show") {player.activeDeal = "TV Show";showDeal("📺 Mainstream Icon: You featured as a celebrity guest on a national Late Night TV Show!");} else if (player.fans >= 10000 && player.activeDeal !== "Sondico") {player.activeDeal = "Sondico";showDeal("👟 Boot Contract: Sondico sent you a basic kit package & performance boots.");} else if (player.fans >= 1000 && player.activeDeal !== "Flower Shop") {player.activeDeal = "Flower Shop";showDeal("💐 Local Deal: You earned a small payout for promoting the town flower shop.");}}function showDeal(text) {const dBox = document.getElementById('deal-box');dBox.style.display = "block";dBox.innerText = text;}// SCENARIO SYSTEM (SOCIAL MEDIA & RELATIONSHIPS)function triggerScenario() {document.getElementById('action-btn').style.display = 'block';document.getElementById('scenario-btn').style.display = 'none';let r = Math.random();if (r < 0.33) {let choice = confirm("[SOCIAL MEDIA] You scored an amazing goal! Do you post an arrogant tweet boasting about your lone talent? (OK for Yes, Cancel for Humble post)");if (choice) {player.teamRel -= 30;player.fans += 5000;logToHub("📲 Arrogant Tweet posted. Fans loved the confidence (+5k fans), but teammates are completely turning against you (-30% Team Rel). Opportunities to score will decline!");} else {player.teamRel += 10;logToHub("📲 You praised the whole squad's assist. Teammates respect your maturity (+10% Team Rel).");}} else if (r < 0.66) {let choice = confirm("[MANAGER DRAMA] The manager subbed you off in the 60th minute. Do you argue with him on the touchline? (OK to Argue, Cancel to Sit Quietly)");if (choice) {player.managerRel -= 40;logToHub("👔 Locker room clash! You argued with the manager. He benches your progress metrics (-40% Manager Rel).");} else {player.managerRel += 10;logToHub("👔 You shook the manager's hand. He values your compliance (+10% Manager Rel).");}} else {if (player.fans >= 100000) {alert("[STALKER SCENARIO] Intruders and obsessive stalker fans bypassed stadium security trying to match paths to your locker room! Safety protocols initiated. PR team mitigated damages.");player.fans += 20000;} else {logToHub("Standard PR Scenario: Visited an academy soccer camp. Fanbase building steadily.");player.fans += 500;}}updateHub();}// GAME OVER & PAYWALL SIMULATIONfunction triggerGameOver(reason) {document.getElementById('gameover-reason').innerText = reason;changeScreen('screen-gameover');}function mockPayment(amount) {alert(💳 Simulated Secure Payment Gate: £${amount} processed successfully!);if (amount === 3) {player.tier = "National League";player.club = "Town Center FC (Revived)";player.gamesPlayed = 0;player.totalRatings = 0;player.managerRel = 80;player.teamRel = 80;changeScreen('screen-hub');logToHub("❤️ Career Safeguard Used! You have reset back at the National League baseline tier.");} else if (amount === 5) {player.isLifetime = true;alert("♾️ Lifetime Mode Unlocked! Your character will no longer be forced out at 40 years old.");}updateHub();}
+        if (player.gamesPlayed === 5 && player.tier === "Non-Professional") {
+            runScoutTryouts();
+            return;
+        }
+
+        if (player.gamesPlayed >= 10) {
+            evaluateLeaguePerformance();
+            return;
+        }
+
+        if(Math.random() > 0.5) {
+            document.getElementById('action-btn').style.display = 'none';
+            document.getElementById('scenario-btn').style.display = 'block';
+        }
+    }
+
+    function runScoutTryouts() {
+        let avg = player.totalRatings / 5;logToHub(--- TRYOUT EVALUATION ---);logToHub(Your 5-game average scout rating: ${avg.toFixed(1)});if (avg >= 9.0) {player.tier = "Premier League Youth";player.club = "Manchester Reds U23";} else if (avg >= 8.0) {player.tier = "Championship";player.club = "Birmingham Blues";} else if (avg >= 7.0) {player.tier = "League One";player.club = "Yorkshire Athletic";} else if (avg >= 6.0) {player.tier = "League Two";player.club = "Coastal United";} else {player.tier = "National League";player.club = "Town Center FC";}logToHub(Scouts finalized terms! You have been placed into the **${player.tier}** playing for **${player.club}**.);player.gamesPlayed = 0;player.totalRatings = 0;updateHub();}function evaluateLeaguePerformance() {let avg = player.totalRatings / 10;logToHub(--- END OF REVIEWS ---);if (player.tier === "National League" && avg < 6.0) {triggerGameOver("You performed poorly over your initial stretch in the National League. The board released you from your contract. No other teams want to take a gamble on you.");return;}if (player.tier === "Premier League Youth") {if (avg >= 9.0) {player.tier = "Premier League First Team";player.club = "Manchester Reds Senior Team";logToHub("🚀 Sensational! The First Team manager called you up to start alongside world-class real players!");} else if (avg < 8.0) {player.tier = "Championship";player.club = "Birmingham Blues";logToHub("📉 Dropped! You didn't maintain a 9.0 average. You were sent down to the Championship.");}}player.age++;if (player.age >= 40 && !player.isLifetime) {triggerGameOver("Retirement! You reached the age of 40. Your legs cannot handle professional match requirements any longer.");return;}player.gamesPlayed = 0;player.totalRatings = 0;updateHub();}function checkBrandDeals() {if (player.fans >= 1000000 && player.activeDeal !== "Nike") {player.activeDeal = "Nike";showDeal("🔥 Elite Sponsor: Signed a major multi-million boot partnership deal with NIKE!");} else if (player.fans >= 100000 && player.activeDeal !== "TV Show") {player.activeDeal = "TV Show";showDeal("📺 Mainstream Icon: You featured as a celebrity guest on a national Late Night TV Show!");} else if (player.fans >= 10000 && player.activeDeal !== "Sondico") {player.activeDeal = "Sondico";showDeal("👟 Boot Contract: Sondico sent you a basic kit package & performance boots.");} else if (player.fans >= 1000 && player.activeDeal !== "Flower Shop") {player.activeDeal = "Flower Shop";showDeal("💐 Local Deal: You earned a small payout for promoting the town flower shop.");}}function showDeal(text) {const dBox = document.getElementById('deal-box');dBox.style.display = "block";dBox.innerText = text;}function triggerScenario() {document.getElementById('action-btn').style.display = 'block';document.getElementById('scenario-btn').style.display = 'none';let r = Math.random();if (r < 0.33) {let choice = confirm("[SOCIAL MEDIA] You scored an amazing goal! Do you post an arrogant tweet boasting about your lone talent? (OK for Yes, Cancel for Humble post)");if (choice) {player.teamRel -= 30;player.fans += 5000;logToHub("📲 Arrogant Tweet posted. Fans loved the confidence (+5k fans), but teammates are completely turning against you (-30% Team Rel). Opportunities to score will decline!");} else {player.teamRel += 10;logToHub("📲 You praised the whole squad's assist. Teammates respect your maturity (+10% Team Rel).");}} else if (r < 0.66) {let choice = confirm("[MANAGER DRAMA] The manager subbed you off in the 60th minute. Do you argue with him on the touchline? (OK to Argue, Cancel to Sit Quietly)");if (choice) {player.managerRel -= 40;logToHub("👔 Locker room clash! You argued with the manager. He benches your progress metrics (-40% Manager Rel).");} else {player.managerRel += 10;logToHub("👔 You shook the manager's hand. He values your compliance (+10% Manager Rel).");}} else {if (player.fans >= 100000) {alert("[STALKER SCENARIO] Intruders and obsessive stalker fans bypassed stadium security trying to match paths to your locker room! Safety protocols initiated. PR team mitigated damages.");player.fans += 20000;} else {logToHub("Standard PR Scenario: Visited an academy soccer camp. Fanbase building steadily.");player.fans += 500;}}updateHub();}function triggerGameOver(reason) {document.getElementById('gameover-reason').innerText = reason;changeScreen('screen-gameover');}function mockPayment(amount) {alert(¼ Simulated Secure Payment Gate: £${amount} processed successfully!);if (amount === 3) {player.tier = "National League";player.club = "Town Center FC (Revived)";player.gamesPlayed = 0;player.totalRatings = 0;player.managerRel = 80;player.teamRel = 80;changeScreen('screen-hub');logToHub("❤️ Career Safeguard Used! You have reset back at the National League baseline tier.");} else if (amount === 5) {player.isLifetime = true;alert("â Unlocked! Your character will no longer be forced out at 40 years old.");}updateHub();}
